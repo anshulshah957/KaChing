@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:layout_height="match_parent">
 
     <SearchView
         android:layout_width="match_parent"
@@ -16,7 +15,6 @@
     <ExpandableListView
         android:id="@+id/dynamic"
         android:layout_width="match_parent"
-        android:layout_height="458dp"
-        android:layout_gravity="bottom" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>
