@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import android.widget.Toast;
+import android.content.Intent;
+import android.app.SearchManager;
 
 public class StockListActivity extends AppCompatActivity {
     ExpandableListView expandableListView;
@@ -37,6 +39,14 @@ public class StockListActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        // Get the intent, verify the action and get the query
+        Intent intent = getIntent();
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            //doMySearch(query);
+            Toast.makeText(StockListActivity.this, query, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void fillData() {

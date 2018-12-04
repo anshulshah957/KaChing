@@ -6,9 +6,10 @@
     android:layout_height="match_parent">
 
     <SearchView
+        android:id="@+id/search"
         android:layout_width="match_parent"
-        android:layout_gravity="top"
-        android:layout_height="29dp">
+        android:layout_height="29dp"
+        android:layout_gravity="top">
 
     </SearchView>
 
