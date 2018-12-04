@@ -10,6 +10,9 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Map;
 import android.graphics.Typeface;
+import android.widget.ImageButton;
+import android.widget.Toast;
+import android.view.View;
 
 
 public class MyExListAdapter extends BaseExpandableListAdapter {
@@ -80,7 +83,7 @@ public class MyExListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         String addedInfo = (String) getChild(groupPosition, childPosition);
 
         if (convertView == null) {
@@ -92,6 +95,13 @@ public class MyExListAdapter extends BaseExpandableListAdapter {
         txtChild.setTypeface(custom_font);
         txtChild.setTextSize(18);
         txtChild.setText(addedInfo);
+        final ImageButton playGraph = (ImageButton) convertView.findViewById(R.id.imageButton);
+        playGraph.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View v) {
+                Toast.makeText(playGraph.getContext(),"ImageButton Clicked: " + companies.get(groupPosition), Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         return convertView;
     }

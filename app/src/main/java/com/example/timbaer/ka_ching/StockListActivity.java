@@ -28,15 +28,6 @@ public class StockListActivity extends AppCompatActivity {
 
         listAdapter = new MyExListAdapter(this, companies, addInfo);
         expandableListView.setAdapter(listAdapter);
-
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Toast.makeText(StockListActivity.this,
-                        companies.get(groupPosition) + " : " + addInfo.get(companies.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
     }
 
     public void fillData() {
