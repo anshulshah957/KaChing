@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import android.widget.Toast;
 import android.content.Intent;
 import android.app.SearchManager;
+import android.widget.SearchView;
+import android.util.Log;
 
 public class StockListActivity extends AppCompatActivity {
     ExpandableListView expandableListView;
@@ -31,22 +33,21 @@ public class StockListActivity extends AppCompatActivity {
         listAdapter = new MyExListAdapter(this, companies, addInfo);
         expandableListView.setAdapter(listAdapter);
 
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+        final SearchView searchView = (SearchView) findViewById(R.id.search);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Toast.makeText(StockListActivity.this,
-                        companies.get(groupPosition) + " : " + addInfo.get(companies.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("ToastCheck", "ToastCheck");
+                Toast.makeText(searchView.getContext(), query, Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
                 return false;
             }
         });
-
-        // Get the intent, verify the action and get the query
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            //doMySearch(query);
-            Toast.makeText(StockListActivity.this, query, Toast.LENGTH_SHORT).show();
-        }
     }
 
     public void fillData() {
