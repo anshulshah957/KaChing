@@ -23,7 +23,7 @@ public class MyExListAdapter extends BaseExpandableListAdapter {
         this.companies = companies;
         this.addInfo = addInfo;
         try {
-            custom_font = Typeface.createFromAsset(context.getAssets(), "fonts/large_font.tff");
+            custom_font = Typeface.createFromAsset(context.getAssets(), "fonts/large_font.ttf");
         } catch (Exception e) {
             Log.d("NoFont", e.toString());
         }
@@ -73,7 +73,8 @@ public class MyExListAdapter extends BaseExpandableListAdapter {
         }
 
         TextView txtParent = (TextView) convertView.findViewById(R.id.txtParent);
-        //txtParent.setTypeface(custom_font);
+        txtParent.setTypeface(custom_font);
+        txtParent.setTextSize(25);
         txtParent.setText(company);
         return convertView;
     }
@@ -88,6 +89,8 @@ public class MyExListAdapter extends BaseExpandableListAdapter {
         }
 
         TextView txtChild = (TextView) convertView.findViewById(R.id.txtChild);
+        txtChild.setTypeface(custom_font);
+        txtChild.setTextSize(18);
         txtChild.setText(addedInfo);
 
         return convertView;

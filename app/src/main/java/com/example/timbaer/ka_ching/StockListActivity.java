@@ -45,19 +45,38 @@ public class StockListActivity extends AppCompatActivity {
 
         companies.add("GOOG");
         companies.add("AAPL");
+        companies.add("Dow Jones");
+        companies.add("S&P 500");
+        companies.add("BA");
+        companies.add("BRK-B");
+        companies.add("DIS");
+        companies.add("GE");
 
         List<String> GOOG = new ArrayList<>();
         List<String> AAPL = new ArrayList<>();
+        List<String> Dow_Jones = new ArrayList<>();
+        List<String> SP_500 = new ArrayList<>();
+        List<String> BA = new ArrayList<>();
+        List<String> BRKB = new ArrayList<>();
+        List<String> DIS = new ArrayList<>();
+        List<String> GE = new ArrayList<>();
 
-        GOOG.add("Chart");
         GOOG.add("addInfo");
-        GOOG.add("Button");
-        AAPL.add("Chart");
         AAPL.add("addInfo");
-        AAPL.add("Button");
+        Dow_Jones.add("addInfo");
+        SP_500.add("addInfo");
+        BA.add("addInfo");
+        BRKB.add("addInfo");
+        DIS.add("addInfo");
+        GE.add("addInfo");
 
         addInfo.put(companies.get(0),GOOG);
         addInfo.put(companies.get(1),AAPL);
-
+        addInfo.put(companies.get(2),Dow_Jones);
+        addInfo.put(companies.get(3),SP_500);
+        addInfo.put(companies.get(4),BA);
+        addInfo.put(companies.get(5),BRKB);
+        addInfo.put(companies.get(6),DIS);
+        addInfo.put(companies.get(7),GE);
     }
 }
