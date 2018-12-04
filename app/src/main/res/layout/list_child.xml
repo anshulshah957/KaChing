@@ -8,13 +8,13 @@
         android:layout_width="200sp"
         android:layout_height="wrap_content"
         android:layout_gravity="top|start" />
-
+    
     <ImageButton
         android:id="@+id/imageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|end"
-        android:src="@drawable/kaching"
+        android:src="@drawable/stock_chart"
         android:padding = "20sp"
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
