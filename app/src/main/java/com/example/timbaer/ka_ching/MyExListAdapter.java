@@ -12,7 +12,8 @@ import java.util.Map;
 import android.graphics.Typeface;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import android.view.View;
+import java.util.ArrayList;
+
 
 
 public class MyExListAdapter extends BaseExpandableListAdapter {
@@ -20,6 +21,8 @@ public class MyExListAdapter extends BaseExpandableListAdapter {
     List<String> companies;
     Map<String, List<String>> addInfo;
     Typeface custom_font;
+    List<String> arrayList;
+    boolean isFirst = true;
 
     public MyExListAdapter(Context context, List<String> companies, Map<String, List<String>> addInfo) {
         this.context = context;
@@ -28,9 +31,30 @@ public class MyExListAdapter extends BaseExpandableListAdapter {
         try {
             custom_font = Typeface.createFromAsset(context.getAssets(), "fonts/large_font.ttf");
         } catch (Exception e) {
-            Log.d("NoFont", e.toString());
+            Log.d("MyExListAdapter", e.toString());
+        }
+        if (isFirst) {
+            this.arrayList = new ArrayList<String>();
+            this.arrayList.addAll(companies);
+            isFirst = false;
         }
     }
+
+    public void filter(String query) {
+        companies.clear();
+        if (query.isEmpty()) {
+            companies.addAll(arrayList);
+        }
+        else {
+            for (String company : arrayList) {
+                if (company.contains(query)) {
+                    companies.add(company);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getGroupCount() {
         return companies.size();

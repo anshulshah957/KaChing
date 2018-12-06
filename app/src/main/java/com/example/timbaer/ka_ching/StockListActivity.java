@@ -1,8 +1,6 @@
 package com.example.timbaer.ka_ching;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
 import java.util.HashMap;
@@ -10,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import android.widget.Toast;
-import android.content.Intent;
-import android.app.SearchManager;
 import android.widget.SearchView;
 import android.util.Log;
 
@@ -20,7 +16,7 @@ public class StockListActivity extends AppCompatActivity {
 
     List<String> companies;
     Map<String, List<String>> addInfo;
-    ExpandableListAdapter listAdapter;
+    private MyExListAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +41,7 @@ public class StockListActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                (StockListActivity.this).listAdapter.filter(newText);
                 return false;
             }
         });
