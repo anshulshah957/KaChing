@@ -1,6 +1,7 @@
 package com.example.timbaer.ka_ching;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ExpandableListView;
 
 import java.util.HashMap;
@@ -11,12 +12,24 @@ import android.widget.Toast;
 import android.widget.SearchView;
 import android.util.Log;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class StockListActivity extends AppCompatActivity {
     ExpandableListView expandableListView;
 
     List<String> companies;
     Map<String, List<String>> addInfo;
     private MyExListAdapter listAdapter;
+
+    private  JSONObject response;
+    private static RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +42,16 @@ public class StockListActivity extends AppCompatActivity {
         listAdapter = new MyExListAdapter(this, companies, addInfo);
         expandableListView.setAdapter(listAdapter);
 
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                String tickerName = (String) listAdapter.getGroup(groupPosition);
+                Toast.makeText(StockListActivity.this, tickerName, Toast.LENGTH_SHORT).show();
+                startApiCall(tickerName.toLowerCase());
+                return false;
+            }
+        });
+
         final SearchView searchView = (SearchView) findViewById(R.id.search);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -36,6 +59,7 @@ public class StockListActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 Log.d("ToastCheck", "ToastCheck");
                 Toast.makeText(searchView.getContext(), query, Toast.LENGTH_LONG).show();
+                startApiCall(query.toLowerCase());
                 return false;
             }
 
@@ -86,5 +110,47 @@ public class StockListActivity extends AppCompatActivity {
         addInfo.put(companies.get(5),BRKB);
         addInfo.put(companies.get(6),DIS);
         addInfo.put(companies.get(7),GE);
+    }
+    /**
+     *
+     * Make a call to the IP geolocation API.
+     *
+     * @param ticker ticker symbol for the app to look up
+     */
+    public void startApiCall(final String ticker) {
+        try {
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.GET,
+                    "https://api.iextrading.com/1.0/stocks/" + ticker + "/chart/6m",
+                    null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(final JSONObject response) {
+                            apiCallDone(response);
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(final VolleyError error) {
+                    Log.e("API", error.toString());
+                }
+            });
+            jsonObjectRequest.setShouldCache(false);
+            requestQueue.add(jsonObjectRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Handle the response from our IP geolocation API.
+     *
+     * @param response response from our IP geolocation API.
+     */
+    void apiCallDone(final JSONObject response) {
+        try {
+            Log.d("API", response.toString());
+        } catch (JSONException ignored) {
+
+        }
     }
 }
