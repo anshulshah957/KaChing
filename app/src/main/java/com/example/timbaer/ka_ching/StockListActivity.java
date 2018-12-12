@@ -18,8 +18,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.android.volley.toolbox.JsonArrayRequest;
 
 public class StockListActivity extends AppCompatActivity {
     ExpandableListView expandableListView;
@@ -35,6 +38,8 @@ public class StockListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.stock_list);
+        Log.d("MyTag", "onCreate");
+        requestQueue = Volley.newRequestQueue(this);
 
         expandableListView = (ExpandableListView) findViewById(R.id.dynamic);
         fillData();
@@ -111,46 +116,41 @@ public class StockListActivity extends AppCompatActivity {
         addInfo.put(companies.get(6),DIS);
         addInfo.put(companies.get(7),GE);
     }
+    //"https://api.iextrading.com/1.0/stock/" + ticker + "/chart/6m"
     /**
      *
-     * Make a call to the IP geolocation API.
+     * Make a call to the IEX API
      *
-     * @param ticker ticker symbol for the app to look up
+     * @param ticker stock symbol for the app to look up
      */
     public void startApiCall(final String ticker) {
-        try {
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    Request.Method.GET,
-                    "https://api.iextrading.com/1.0/stocks/" + ticker + "/chart/6m",
-                    null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(final JSONObject response) {
-                            apiCallDone(response);
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(final VolleyError error) {
-                    Log.e("API", error.toString());
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                "https://api.iextrading.com/1.0/stock/" + ticker + "/chart/6m",
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        apiCallDone(response);
+                    }
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error){
+                        Log.d("APIFAIL", error.toString());
+
+                    }
                 }
-            });
-            jsonObjectRequest.setShouldCache(false);
-            requestQueue.add(jsonObjectRequest);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        );
+        requestQueue.add(jsonArrayRequest);
     }
 
     /**
-     * Handle the response from our IP geolocation API.
+     * Handle the response from our IEX API
      *
-     * @param response response from our IP geolocation API.
+     * @param response response from our IEX API
      */
-    void apiCallDone(final JSONObject response) {
-        try {
-            Log.d("API", response.toString());
-        } catch (JSONException ignored) {
-
-        }
+    void apiCallDone(final JSONArray response) {
+        Log.d("API", response.toString());
     }
 }
