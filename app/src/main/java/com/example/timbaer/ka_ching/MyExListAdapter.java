@@ -126,8 +126,20 @@ public class MyExListAdapter extends BaseExpandableListAdapter {
         graph.addSeries(series);
         graph.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Audio audio = new Audio();
-                audio.playData(addedInfo);
+                final Audio audio = new Audio();
+                Thread audioPlayer = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        audio.playData(addedInfo);
+                    }
+                });
+                audioPlayer.start();
+                try {
+                    audioPlayer.join();
+                } catch (InterruptedException e) {
+                    Log.d("AudioInterrupt",e.toString());
+                }
+
             }
         });
 

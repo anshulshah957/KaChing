@@ -14,9 +14,9 @@ import android.util.Log;
 public class Audio extends Activity {
     // originally from http://marblemice.blogspot.com/2010/04/generate-and-play-tone-in-android.html
     // and modified by Steve Pomeroy <steve@staticfree.info>
-    private final int duration = 1; // seconds
+    private final double duration = 0.1; // seconds
     private final int sampleRate = 8000;
-    private final int numSamples = duration * sampleRate;
+    private final int numSamples = (int) Math.round(duration * sampleRate);
     private final double sample[] = new double[numSamples];
     private double freqOfTone = 440; // hz
 
@@ -62,26 +62,47 @@ public class Audio extends Activity {
         }
     }
 
-    void playSound(){
-        final AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
-                sampleRate, AudioFormat.CHANNEL_OUT_MONO,
-                AudioFormat.ENCODING_PCM_16BIT, generatedSnd.length,
-                AudioTrack.MODE_STATIC);
-        audioTrack.write(generatedSnd, 0, generatedSnd.length);
-        audioTrack.play();
+    void playSound() {
+        final AudioTrack audioTrack;
+        try {
+            audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
+                    sampleRate, AudioFormat.CHANNEL_OUT_MONO,
+                    AudioFormat.ENCODING_PCM_16BIT, generatedSnd.length,
+                    AudioTrack.MODE_STATIC);
+        } catch (Exception e) {
+            return;
+        }
+        try {
+            audioTrack.write(generatedSnd, 0, generatedSnd.length);
+        } catch (Exception e) {
+            return;
+        }
+        try {
+            audioTrack.play();
+            Log.d("UNINIT", "PLAYED");
+        } catch (IllegalStateException e) {
+            Log.d("UNINIT", e.toString());
+        }
+        audioTrack.release();
     }
 
     void playData(List<Integer> data) {
         List<Integer> normalizeData = normalize(data);
         for (Integer point: normalizeData) {
             freqOfTone = point;
-            genTone();
-            playSound();
+            Thread playSound = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    genTone();
+                }
+            });
+            playSound.start();
             try {
-                TimeUnit.MILLISECONDS.sleep(1250);
+                playSound.join();
             } catch (InterruptedException e) {
-                Log.d("Interrupt", e.toString());
+                Log.d("PlaySoundInterrupt", e.toString());
             }
+            playSound();
         }
     }
 
@@ -97,12 +118,12 @@ public class Audio extends Activity {
             }
         }
 
-        int range = max - min;
+        int range = (int) Math.round(0.8*(max - min));
 
         List<Integer> normalizeData = new ArrayList<>();
 
         for (Integer point: data) {
-            normalizeData.add(700 * ((point - min) / range) + 50);
+            normalizeData.add(600 * ((point - min) / range) + 400);
         }
 
         return normalizeData;
