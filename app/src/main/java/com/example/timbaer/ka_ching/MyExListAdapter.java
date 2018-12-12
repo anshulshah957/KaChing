@@ -13,18 +13,21 @@ import android.graphics.Typeface;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import java.util.ArrayList;
-
+import com.jjoe64.graphview.GraphView;
+import android.view.View;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 
 public class MyExListAdapter extends BaseExpandableListAdapter {
     Context context;
     List<String> companies;
-    Map<String, List<String>> addInfo;
+    Map<String, List<Integer>> addInfo;
     Typeface custom_font;
     List<String> arrayList;
     boolean isFirst = true;
 
-    public MyExListAdapter(Context context, List<String> companies, Map<String, List<String>> addInfo) {
+    public MyExListAdapter(Context context, List<String> companies, Map<String, List<Integer>> addInfo) {
         this.context = context;
         this.companies = companies;
         this.addInfo = addInfo;
@@ -108,24 +111,20 @@ public class MyExListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(final int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        String addedInfo = (String) getChild(groupPosition, childPosition);
+        List<Integer> addedInfo = addInfo.get(companies.get(groupPosition));
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_child, null);
         }
-
-        TextView txtChild = (TextView) convertView.findViewById(R.id.txtChild);
-        txtChild.setTypeface(custom_font);
-        txtChild.setTextSize(18);
-        txtChild.setText(addedInfo);
-        final ImageButton playGraph = (ImageButton) convertView.findViewById(R.id.imageButton);
-        playGraph.setOnClickListener(new View.OnClickListener() {
-            public void onClick(final View v) {
-                Toast.makeText(playGraph.getContext(),"ImageButton Clicked: " + companies.get(groupPosition), Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        GraphView graph = (GraphView) convertView.findViewById(R.id.graph);
+        graph.removeAllSeries();
+        DataPoint[] toAdd = new DataPoint[addedInfo.size()];
+        for (int i = 0; i < toAdd.length; i++) {
+            toAdd[i] = new DataPoint(i, addedInfo.get(i));
+        }
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(toAdd);
+        graph.addSeries(series);
 
         return convertView;
     }

@@ -28,10 +28,10 @@ public class StockListActivity extends AppCompatActivity {
     ExpandableListView expandableListView;
 
     List<String> companies;
-    Map<String, List<String>> addInfo;
+    Map<String, List<Integer>> addInfo;
     private MyExListAdapter listAdapter;
 
-    private  JSONObject response;
+    private  JSONArray response;
     private static RequestQueue requestQueue;
 
     @Override
@@ -82,35 +82,27 @@ public class StockListActivity extends AppCompatActivity {
 
         companies.add("GOOG");
         companies.add("AAPL");
-        companies.add("Dow Jones");
-        companies.add("S&P 500");
+        companies.add("DJI");
+        companies.add("INX");
         companies.add("BA");
         companies.add("BRK-B");
         companies.add("DIS");
         companies.add("GE");
 
-        List<String> GOOG = new ArrayList<>();
-        List<String> AAPL = new ArrayList<>();
-        List<String> Dow_Jones = new ArrayList<>();
-        List<String> SP_500 = new ArrayList<>();
-        List<String> BA = new ArrayList<>();
-        List<String> BRKB = new ArrayList<>();
-        List<String> DIS = new ArrayList<>();
-        List<String> GE = new ArrayList<>();
+        List<Integer> GOOG = new ArrayList<>();
+        List<Integer> AAPL = new ArrayList<>();
+        List<Integer> DJI = new ArrayList<>();
+        List<Integer> INX = new ArrayList<>();
+        List<Integer> BA = new ArrayList<>();
+        List<Integer> BRKB = new ArrayList<>();
+        List<Integer> DIS = new ArrayList<>();
+        List<Integer> GE = new ArrayList<>();
 
-        GOOG.add("addInfo");
-        AAPL.add("addInfo");
-        Dow_Jones.add("addInfo");
-        SP_500.add("addInfo");
-        BA.add("addInfo");
-        BRKB.add("addInfo");
-        DIS.add("addInfo");
-        GE.add("addInfo");
 
         addInfo.put(companies.get(0),GOOG);
         addInfo.put(companies.get(1),AAPL);
-        addInfo.put(companies.get(2),Dow_Jones);
-        addInfo.put(companies.get(3),SP_500);
+        addInfo.put(companies.get(2),DJI);
+        addInfo.put(companies.get(3),INX);
         addInfo.put(companies.get(4),BA);
         addInfo.put(companies.get(5),BRKB);
         addInfo.put(companies.get(6),DIS);
@@ -131,7 +123,7 @@ public class StockListActivity extends AppCompatActivity {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        apiCallDone(response);
+                        apiCallDone(response, ticker);
                     }
                 },
                 new Response.ErrorListener(){
@@ -150,7 +142,23 @@ public class StockListActivity extends AppCompatActivity {
      *
      * @param response response from our IEX API
      */
-    void apiCallDone(final JSONArray response) {
+    void apiCallDone(final JSONArray response, final String ticker) {
         Log.d("API", response.toString());
+        List<Integer> toPut = new ArrayList<Integer>();
+        try {
+            for (int i = 0; i < response.length(); i++) {
+                JSONObject jsonobject = response.getJSONObject(i);
+                String open = jsonobject.getString("open");
+                Float toAddFirst = Float.parseFloat(open);
+                float toAddFloat = toAddFirst;
+                int toAddInt = Math.round(toAddFloat);
+                Integer toAdd = new Integer(toAddInt);
+                toPut.add(toAdd);
+            }
+        } catch(Exception e) {
+            Log.d("JSONEXCEPTION", e.toString());
+        }
+        addInfo.put(ticker.toUpperCase(), toPut);
+        listAdapter.notifyDataSetChanged();
     }
 }
