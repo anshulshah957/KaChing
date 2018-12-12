@@ -7,6 +7,7 @@ import android.media.AudioTrack;
 import android.media.AudioFormat;
 import android.os.Handler;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import android.util.Log;
 
@@ -71,7 +72,8 @@ public class Audio extends Activity {
     }
 
     void playData(List<Integer> data) {
-        for (Integer point: data) {
+        List<Integer> normalizeData = normalize(data);
+        for (Integer point: normalizeData) {
             freqOfTone = point;
             genTone();
             playSound();
@@ -81,5 +83,28 @@ public class Audio extends Activity {
                 Log.d("Interrupt", e.toString());
             }
         }
+    }
+
+    List<Integer> normalize(List<Integer> data) {
+        int min = data.get(0);
+        int max = data.get(0);
+        for (Integer point: data) {
+            if (point > max) {
+                max = point;
+            }
+            if (point < min) {
+                min = point;
+            }
+        }
+
+        int range = max - min;
+
+        List<Integer> normalizeData = new ArrayList<>();
+
+        for (Integer point: data) {
+            normalizeData.add(700 * ((point - min) / range) + 50);
+        }
+
+        return normalizeData;
     }
 }
