@@ -82,31 +82,28 @@ public class StockListActivity extends AppCompatActivity {
 
         companies.add("GOOG");
         companies.add("AAPL");
-        companies.add("DJI");
-        companies.add("INX");
+        companies.add("DIA");
+        companies.add("SPY");
         companies.add("BA");
-        companies.add("BRK-B");
         companies.add("DIS");
         companies.add("GE");
 
         List<Integer> GOOG = new ArrayList<>();
         List<Integer> AAPL = new ArrayList<>();
-        List<Integer> DJI = new ArrayList<>();
-        List<Integer> INX = new ArrayList<>();
+        List<Integer> DIA = new ArrayList<>();
+        List<Integer> SPY = new ArrayList<>();
         List<Integer> BA = new ArrayList<>();
-        List<Integer> BRKB = new ArrayList<>();
         List<Integer> DIS = new ArrayList<>();
         List<Integer> GE = new ArrayList<>();
 
 
         addInfo.put(companies.get(0),GOOG);
         addInfo.put(companies.get(1),AAPL);
-        addInfo.put(companies.get(2),DJI);
-        addInfo.put(companies.get(3),INX);
+        addInfo.put(companies.get(2),DIA);
+        addInfo.put(companies.get(3),SPY);
         addInfo.put(companies.get(4),BA);
-        addInfo.put(companies.get(5),BRKB);
-        addInfo.put(companies.get(6),DIS);
-        addInfo.put(companies.get(7),GE);
+        addInfo.put(companies.get(5),DIS);
+        addInfo.put(companies.get(6),GE);
     }
     //"https://api.iextrading.com/1.0/stock/" + ticker + "/chart/6m"
     /**
@@ -129,8 +126,6 @@ public class StockListActivity extends AppCompatActivity {
                 new Response.ErrorListener(){
                     @Override
                     public void onErrorResponse(VolleyError error){
-                        Log.d("APIFAIL", error.toString());
-
                     }
                 }
         );
@@ -157,6 +152,9 @@ public class StockListActivity extends AppCompatActivity {
             }
         } catch(Exception e) {
             Log.d("JSONEXCEPTION", e.toString());
+        }
+        if (!(companies.contains(ticker.toUpperCase()))) {
+            companies.add(ticker.toUpperCase());
         }
         addInfo.put(ticker.toUpperCase(), toPut);
         listAdapter.notifyDataSetChanged();
