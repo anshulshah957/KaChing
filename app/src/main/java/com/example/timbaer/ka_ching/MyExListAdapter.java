@@ -18,7 +18,6 @@ import android.view.View;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-
 public class MyExListAdapter extends BaseExpandableListAdapter {
     Context context;
     List<String> companies;
@@ -65,7 +64,7 @@ public class MyExListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return addInfo.get(companies.get(groupPosition)).size();
+        return 1;
     }
 
     @Override
@@ -111,13 +110,13 @@ public class MyExListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(final int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        List<Integer> addedInfo = addInfo.get(companies.get(groupPosition));
+        final List<Integer> addedInfo = addInfo.get(companies.get(groupPosition));
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_child, null);
         }
-        GraphView graph = (GraphView) convertView.findViewById(R.id.graph);
+        final GraphView graph = (GraphView) convertView.findViewById(R.id.graph);
         graph.removeAllSeries();
         DataPoint[] toAdd = new DataPoint[addedInfo.size()];
         for (int i = 0; i < toAdd.length; i++) {
@@ -125,6 +124,12 @@ public class MyExListAdapter extends BaseExpandableListAdapter {
         }
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(toAdd);
         graph.addSeries(series);
+        graph.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Audio audio = new Audio();
+                audio.playData(addedInfo);
+            }
+        });
 
         return convertView;
     }
