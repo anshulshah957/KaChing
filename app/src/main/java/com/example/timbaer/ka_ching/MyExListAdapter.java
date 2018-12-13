@@ -134,11 +134,6 @@ public class MyExListAdapter extends BaseExpandableListAdapter {
                     }
                 });
                 audioPlayer.start();
-                try {
-                    audioPlayer.join();
-                } catch (InterruptedException e) {
-                    Log.d("AudioInterrupt",e.toString());
-                }
 
             }
         });

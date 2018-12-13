@@ -6,7 +6,7 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.media.AudioFormat;
 import android.os.Handler;
-import java.util.List;
+import java.util.List  ;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import android.util.Log;
@@ -28,7 +28,6 @@ public class Audio extends Activity {
     protected void onResume() {
         super.onResume();
 
-        // Use a new tread as this can take a while
         final Thread thread = new Thread(new Runnable() {
             public void run() {
                 genTone();
@@ -43,19 +42,16 @@ public class Audio extends Activity {
         thread.start();
     }
 
-    void genTone(){
+    void genTone() {
         // fill out the array
         for (int i = 0; i < numSamples; ++i) {
             sample[i] = sample[i] = Math.sin(2 * Math.PI * i / (sampleRate/freqOfTone));
         }
 
-        // convert to 16 bit pcm sound array
-        // assumes the sample buffer is normalised.
         int idx = 0;
         for (final double dVal : sample) {
             // scale to maximum amplitude
             final short val = (short) ((dVal * 32767));
-            // in 16 bit wav PCM, first byte is the low order byte
             generatedSnd[idx++] = (byte) (val & 0x00ff);
             generatedSnd[idx++] = (byte) ((val & 0xff00) >>> 8);
 
